@@ -1,5 +1,7 @@
 # Battery Level Card
 
+# CURRENTTLY UNDER DEVELOPMENT AND COMPLETELY UNTESTED!!!!
+
 Custom Lovelace card for Home Assistant that visualises the state of charge of any battery sensor. The card shows a simple battery icon whose fill level follows the configured sensor value and highlights critical thresholds.
 
 ## Features
