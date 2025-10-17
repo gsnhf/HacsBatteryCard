@@ -2,5 +2,6 @@
   "name": "Battery Level Card",
   "version": "2025.10.17.0",
   "filename": "battery-level-card.js",
-  "render_readme": true
+  "render_readme": true,
+  "content_in_root": true
 }
