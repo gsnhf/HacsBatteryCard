@@ -1,0 +1,21 @@
+{
+  "name": "hacsbatterycard",
+  "version": "1.0.0",
+  "description": "# CURRENTTLY UNDER DEVELOPMENT AND COMPLETELY UNTESTED!!!!",
+  "main": "rollup.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsnhf/HacsBatteryCard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gsnhf/HacsBatteryCard/issues"
+  },
+  "homepage": "https://github.com/gsnhf/HacsBatteryCard#readme"
+}
