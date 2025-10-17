@@ -1,8 +1,8 @@
 {
   "domain": "battery_level_card",
   "name": "Battery Level Card",
-  "documentation": "https://github.com/gsnhf/HacsBatteryCard",
-  "issue_tracker": "https://github.com/gsnhf/HacsBatteryCard/issues",
+  "documentation": "https://github.com/gsnhf/battery-level-card",
+  "issue_tracker": "https://github.com/gsnhf/battery-level-card/issues",
   "version": "2025.10.17.1",
   "requirements": [],
   "codeowners": [

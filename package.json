@@ -1,5 +1,5 @@
 {
-  "name": "hacsbatterycard",
+  "name": "battery-level-card",
   "version": "1.0.0",
   "description": "# CURRENTTLY UNDER DEVELOPMENT AND COMPLETELY UNTESTED!!!!",
   "main": "rollup.config.js",
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gsnhf/HacsBatteryCard.git"
+    "url": "git+https://github.com/gsnhf/battery-level-card.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gsnhf/HacsBatteryCard/issues"
+    "url": "https://github.com/gsnhf/battery-level-card/issues"
   },
-  "homepage": "https://github.com/gsnhf/HacsBatteryCard#readme",
+  "homepage": "https://github.com/gsnhf/battery-level-card#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.1.4",
