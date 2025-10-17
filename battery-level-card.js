@@ -6,9 +6,14 @@ import { LitElement, html, css } from "lit";
  */
 class BatteryLevelCard extends LitElement {
   static properties = {
-    hass: {},
+    hass: { attribute: false },
     _config: { state: false },
   };
+
+  set hass(value) {
+    this._hass = value;
+    this.requestUpdate();
+  }
 
   static styles = css`
     ha-card {
@@ -130,7 +135,7 @@ class BatteryLevelCard extends LitElement {
       return html``;
     }
 
-    const stateObj = this.hass?.states?.[this._config.entity];
+    const stateObj = this._hass?.states?.[this._config.entity];
     if (!stateObj) {
       return this._renderMessage(`Entity ${this._config.entity} not found`);
     }
@@ -197,7 +202,7 @@ class BatteryLevelCard extends LitElement {
 
   _computeCharging(stateObj) {
     if (this._config.charging_entity) {
-      const chargingState = this.hass?.states?.[this._config.charging_entity];
+      const chargingState = this._hass?.states?.[this._config.charging_entity];
       if (chargingState) {
         return chargingState.state === "on" || chargingState.state === "charging";
       }
@@ -232,11 +237,15 @@ class BatteryLevelCard extends LitElement {
   }
 }
 
-customElements.define("battery-level-card", BatteryLevelCard);
+if (!customElements.get("battery-level-card")) {
+  customElements.define("battery-level-card", BatteryLevelCard);
+}
 
 window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "battery-level-card",
-  name: "Battery Level Card",
-  description: "Visualise a battery sensor as a battery icon",
-});
+if (!window.customCards.some((card) => card.type === "battery-level-card")) {
+  window.customCards.push({
+    type: "battery-level-card",
+    name: "Battery Level Card",
+    description: "Visualise a battery sensor as a battery icon",
+  });
+}
