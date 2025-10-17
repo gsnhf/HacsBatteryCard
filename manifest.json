@@ -8,5 +8,11 @@
   "codeowners": [
     "@gsnhf"
   ],
-  "iot_class": "calculated"
+  "config": {
+    "name": "Battery Level Card",
+    "description": "A Lovelace card to visualize battery sensor levels.",
+    "filename": "battery-level-card.js",
+    "render_readme": true,
+    "content_in_root": true
+  }
 }
