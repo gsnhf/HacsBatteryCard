@@ -2,61 +2,42 @@
 
 # CURRENTTLY UNDER DEVELOPMENT AND COMPLETELY UNTESTED!!!!
 
-Custom Lovelace card for Home Assistant that visualises the state of charge of any battery sensor. The card shows a simple battery icon whose fill level follows the configured sensor value and highlights critical thresholds.
+Minimal custom Lovelace card for Home Assistant that simply renders the configured name. This version acts as the foundation for future functionality.
 
 ## Features
 
-- Visual battery representation with dynamic fill level
-- Optional colour thresholds for warning and critical levels
-- Configurable label, charging indicator and decimal precision
-- Responsive layout that works in panel or grid views
+- Displays the configured name centered inside an `ha-card`
+- Depends only on the Lit helpers bundled with Home Assistant
+- Provides a lightweight starting point for upcoming battery visuals
 
 ## Installation
 
 ### Manual
-1. Copy `battery-level-card.js` into your Home Assistant `config/www` folder.
-2. Add the resource to your Lovelace Dashboards (`Settings → Dashboards → Resources`):
+1. Copy `battery-level-card.js` into your Home Assistant `config/www/community/battery-level-card/` folder.
+2. Add the resource to your Lovelace dashboards (`Settings → Dashboards → Resources`):
    ```yaml
-   url: /local/battery-level-card.js
+   url: /hacsfiles/battery-level-card/battery-level-card.js
    type: module
    ```
-3. Restart your browser (clear cache if required).
+3. Clear the browser cache if the card does not appear right away.
 
 ### HACS
-1. Add this repository as a custom repository from the `Frontend` category.
-2. Install **Battery Level Card**.
-3. Make sure the resource `/hacsfiles/battery-level-card.js` is added automatically, or add it manually.
+1. Add this repository as a custom repository in the `Frontend` section.
+2. Install **Battery Level Card** and wait for the files to be downloaded.
+3. HACS places the file under `config/www/community/battery-level-card/`. Ensure the Lovelace resource exists (see manual step 2).
 
 ## Lovelace Configuration
 
 ```yaml
 type: custom:battery-level-card
-entity: sensor.phone_battery
-name: Phone
-charging_entity: binary_sensor.phone_charging # optional
-charging_label: Lädt # optional, default "Charging"
-warning_level: 30 # optional, default 30
-critical_level: 10 # optional, default 10
-show_percentage: true # optional, default true
-precision: 0 # optional, default 0
-``` 
+name: Wohnzimmer Sensor
+```
 
-### Options
-
-| Option            | Type    | Default              | Description                                            |
-| ----------------- | ------- | -------------------- | ------------------------------------------------------ |
-| `entity`          | string  | required             | Battery sensor entity (0-100%).                        |
-| `name`            | string  | entity friendly name | Optional custom title.                                 |
-| `charging_entity` | string  | –                    | Binary sensor that indicates charging (on = charging). |
-| `charging_label`  | string  | "Charging"           | Custom text shown when the battery is charging.        |
-| `warning_level`   | number  | 30                   | Value threshold for warning colour.                    |
-| `critical_level`  | number  | 10                   | Value threshold for critical colour.                   |
-| `show_percentage` | boolean | true                 | Toggle percentage text.                                |
-| `precision`       | number  | 0                    | Decimal places used for the percentage label.          |
+Only the `name` field is currently used. The card renders the provided text.
 
 ## Development
 
-The card is written as a single JavaScript module built on top of Lit. For adjustments you can edit `battery-level-card.js` directly. No additional tooling is required.
+The card is authored in JavaScript to avoid build tooling while the feature set is small. Lit ships with Home Assistant, so no additional dependencies are required.
 
 ## License
 
