@@ -1,10 +1,12 @@
-import { LitElement, html, css } from "lit";
-
 /**
  * Battery Level Card
  * Lovelace card that displays battery level as a visual battery indicator.
  * Color ranges from red (empty) to green (full).
  */
+
+const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace"));
+const { html, css } = LitElement.prototype;
+
 class BatteryLevelCard extends LitElement {
   static properties = {
     _config: { state: true },
