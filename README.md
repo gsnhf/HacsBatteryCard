@@ -10,8 +10,10 @@ Eine benutzerdefinierte Lovelace-Karte für Home Assistant, die den Batteriestan
 
 - 🔋 **Visuelle Batterie-Anzeige** - Der Batteriestand wird als gefüllte Batterie dargestellt
 - 🎨 **Farbverlauf** - Automatischer Farbwechsel von Rot (leer) über Gelb zu Grün (voll)
-- 📊 **Prozentanzeige** - Der aktuelle Stand wird in Prozent angezeigt
-- ⚙️ **Visueller Editor** - Einfache Konfiguration über die Lovelace UI
+- 📊 **Optionale Prozentanzeige** - Die Prozentzahl kann direkt im Batteriesymbol angezeigt werden
+- ⚙️ **Editor-Unterstützung** - Konfiguration über den Lovelace-Editor oder direkt im YAML-Code
+- ↔️ **Flexible Ausrichtung** - Batteriesymbol horizontal oder vertikal darstellbar
+- 🏷️ **Flexibler Titel** - Sensorbezeichnung optional, neben oder über dem Batteriesymbol
 - 🏠 **HACS-kompatibel** - Einfache Installation über HACS
 
 ## Installation
@@ -48,15 +50,21 @@ type: custom:battery-level-card
 entity: sensor.phone_battery_level
 name: Handy Akku  # optional, überschreibt den Entity-Namen
 show_percentage_text: true  # optional, zeigt % in der Batterie an (Standard: true)
+show_name: true  # optional, zeigt die Sensorbezeichnung an (Standard: true)
+orientation: horizontal  # optional: horizontal | vertical
+title_position: side  # optional: side | top
 ```
 
 ### Konfigurationsoptionen
 
-| Option                 | Typ     | Standard    | Beschreibung                             |
-| ---------------------- | ------- | ----------- | ---------------------------------------- |
-| `entity`               | string  | **Pflicht** | Die Entity-ID des Batterie-Sensors       |
-| `name`                 | string  | Entity-Name | Benutzerdefinierter Name für die Anzeige |
-| `show_percentage_text` | boolean | `true`      | Zeigt die Prozentzahl in der Batterie an |
+| Option                 | Typ     | Standard     | Beschreibung                                               |
+| ---------------------- | ------- | ------------ | ---------------------------------------------------------- |
+| `entity`               | string  | **Pflicht**  | Die Entity-ID des Batterie-Sensors                         |
+| `name`                 | string  | Entity-Name  | Benutzerdefinierter Name für die Anzeige                   |
+| `show_percentage_text` | boolean | `true`       | Zeigt die Prozentzahl im Batteriesymbol an                 |
+| `show_name`            | boolean | `true`       | Blendet die Sensorbezeichnung ein oder aus                 |
+| `orientation`          | string  | `horizontal` | Ausrichtung des Batteriesymbols (`horizontal`, `vertical`) |
+| `title_position`       | string  | `side`       | Titel neben oder über dem Batteriesymbol (`side`, `top`)   |
 
 ## Beispiele
 
@@ -81,6 +89,22 @@ name: Fernbedienung
 show_percentage_text: false
 ```
 
+### Vertikale Darstellung mit Titel darüber
+```yaml
+type: custom:battery-level-card
+entity: sensor.window_sensor_battery
+name: Fenstersensor
+orientation: vertical
+title_position: top
+```
+
+### Ohne Sensorbezeichnung
+```yaml
+type: custom:battery-level-card
+entity: sensor.mouse_battery
+show_name: false
+```
+
 ## Farbschema
 
 Die Farbe der Batterie-Füllung ändert sich automatisch basierend auf dem Ladestand:
@@ -94,7 +118,7 @@ Die Farbe der Batterie-Füllung ändert sich automatisch basierend auf dem Lades
 
 ## Entwicklung
 
-Die Karte ist in JavaScript geschrieben und nutzt Lit, das mit Home Assistant mitgeliefert wird. Keine zusätzlichen Build-Tools oder Abhängigkeiten erforderlich.
+Die Karte ist in JavaScript geschrieben und nutzt native Web Components. Keine zusätzlichen Build-Tools oder Abhängigkeiten erforderlich.
 
 ## Lizenz
 
