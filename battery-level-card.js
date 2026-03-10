@@ -23,8 +23,8 @@ class BatteryLevelCard extends HTMLElement {
       throw new Error("Bitte eine Entity für die battery-level-card angeben.");
     }
 
-    const orientation = config.orientation === "vertical" ? "vertical" : "horizontal";
-    const titlePosition = config.title_position === "top" ? "top" : "side";
+    const orientation = BatteryLevelCard._normalizeOrientation(config.orientation);
+    const titlePosition = BatteryLevelCard._normalizeTitlePosition(config.title_position);
 
     this._config = {
       entity: config.entity,
@@ -39,6 +39,22 @@ class BatteryLevelCard extends HTMLElement {
 
   getCardSize() {
     return 1;
+  }
+
+  static _normalizeOrientation(value) {
+    const normalized = String(value || "horizontal").toLowerCase();
+    if (normalized === "vertical" || normalized === "vertikal") {
+      return "vertical";
+    }
+    return "horizontal";
+  }
+
+  static _normalizeTitlePosition(value) {
+    const normalized = String(value || "side").toLowerCase();
+    if (normalized === "top" || normalized === "oben" || normalized === "above") {
+      return "top";
+    }
+    return "side";
   }
 
   _getBatteryColor(percentage) {
@@ -223,10 +239,6 @@ class BatteryLevelCard extends HTMLElement {
     `;
   }
 
-  static async getConfigElement() {
-    return document.createElement("battery-level-card-editor");
-  }
-
   static getStubConfig() {
     return {
       entity: "sensor.battery_level",
@@ -237,171 +249,106 @@ class BatteryLevelCard extends HTMLElement {
       title_position: "side",
     };
   }
-}
 
-class BatteryLevelCardEditor extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: "open" });
-    this._config = BatteryLevelCard.getStubConfig();
-    this._hass = null;
-  }
-
-  set hass(hass) {
-    this._hass = hass;
-    this._render();
-  }
-
-  setConfig(config) {
-    this._config = {
-      ...BatteryLevelCard.getStubConfig(),
-      ...config,
+  static getConfigForm() {
+    return {
+      schema: [
+        {
+          name: "entity",
+          required: true,
+          selector: { entity: {} },
+        },
+        {
+          name: "name",
+          selector: { text: {} },
+        },
+        {
+          name: "show_name",
+          selector: { boolean: {} },
+        },
+        {
+          name: "show_percentage_text",
+          selector: { boolean: {} },
+        },
+        {
+          name: "orientation",
+          required: true,
+          selector: {
+            select: {
+              mode: "dropdown",
+              options: [
+                { value: "horizontal", label: "Horizontal" },
+                { value: "vertical", label: "Vertikal" },
+              ],
+            },
+          },
+        },
+        {
+          name: "title_position",
+          required: true,
+          selector: {
+            select: {
+              mode: "dropdown",
+              options: [
+                { value: "side", label: "Neben dem Batteriesymbol" },
+                { value: "top", label: "Über dem Batteriesymbol" },
+              ],
+            },
+          },
+        },
+      ],
+      computeLabel: (schema) => {
+        switch (schema.name) {
+          case "name":
+            return "Titel";
+          case "show_name":
+            return "Sensorbezeichnung anzeigen";
+          case "show_percentage_text":
+            return "Prozentzahl in der Batterie anzeigen";
+          case "orientation":
+            return "Ausrichtung des Batteriesymbols";
+          case "title_position":
+            return "Position des Titels";
+          default:
+            return undefined;
+        }
+      },
+      computeHelper: (schema) => {
+        switch (schema.name) {
+          case "name":
+            return "Leer lassen, um den Friendly Name der Entity zu verwenden.";
+          case "orientation":
+            return "Legt fest, ob das Batteriesymbol horizontal oder vertikal gerendert wird.";
+          case "title_position":
+            return "Legt fest, ob der Titel neben oder über dem Batteriesymbol steht.";
+          default:
+            return undefined;
+        }
+      },
+      assertConfig: (config) => {
+        if (!config.entity || typeof config.entity !== "string") {
+          throw new Error("Bitte eine gültige Entity angeben.");
+        }
+      },
     };
-    this._render();
-  }
-
-  _updateConfig(key, value) {
-    const nextConfig = { ...this._config };
-
-    if (key === "name") {
-      if (value) {
-        nextConfig[key] = value;
-      } else {
-        delete nextConfig[key];
-      }
-    } else {
-      nextConfig[key] = value;
-    }
-
-    this._config = nextConfig;
-    this.dispatchEvent(
-      new CustomEvent("config-changed", {
-        detail: { config: nextConfig },
-        bubbles: true,
-        composed: true,
-      })
-    );
-    this._render();
-  }
-
-  _render() {
-    if (!this.shadowRoot) return;
-
-    this.shadowRoot.innerHTML = `
-      <style>
-        :host {
-          display: block;
-        }
-        .form {
-          display: grid;
-          gap: 12px;
-        }
-        label {
-          display: grid;
-          gap: 6px;
-          font-size: 0.9rem;
-          color: var(--primary-text-color);
-        }
-        input,
-        select {
-          box-sizing: border-box;
-          width: 100%;
-          padding: 10px 12px;
-          border: 1px solid var(--divider-color);
-          border-radius: 8px;
-          background: var(--card-background-color, #fff);
-          color: var(--primary-text-color);
-          font: inherit;
-        }
-        .toggle {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        .toggle input {
-          width: auto;
-          margin: 0;
-        }
-        .hint {
-          font-size: 0.8rem;
-          color: var(--secondary-text-color);
-        }
-      </style>
-      <div class="form">
-        <label>
-          Entity
-          <input id="entity" type="text" value="${this._config.entity || ""}" placeholder="sensor.battery_level" />
-        </label>
-        <label>
-          Titel
-          <input id="name" type="text" value="${this._config.name || ""}" placeholder="Optionaler Anzeigename" />
-          <span class="hint">Leer lassen, um den Friendly Name der Entity zu verwenden.</span>
-        </label>
-        <label class="toggle">
-          <input id="show_name" type="checkbox" ${this._config.show_name !== false ? "checked" : ""} />
-          Sensorbezeichnung anzeigen
-        </label>
-        <label class="toggle">
-          <input id="show_percentage_text" type="checkbox" ${this._config.show_percentage_text !== false ? "checked" : ""} />
-          Prozentzahl in der Batterie anzeigen
-        </label>
-        <label>
-          Ausrichtung des Batteriesymbols
-          <select id="orientation">
-            <option value="horizontal" ${this._config.orientation === "horizontal" ? "selected" : ""}>Horizontal</option>
-            <option value="vertical" ${this._config.orientation === "vertical" ? "selected" : ""}>Vertikal</option>
-          </select>
-        </label>
-        <label>
-          Position des Titels
-          <select id="title_position">
-            <option value="side" ${this._config.title_position === "side" ? "selected" : ""}>Neben dem Batteriesymbol</option>
-            <option value="top" ${this._config.title_position === "top" ? "selected" : ""}>Über dem Batteriesymbol</option>
-          </select>
-        </label>
-      </div>
-    `;
-
-    this.shadowRoot.getElementById("entity").addEventListener("change", (event) => {
-      this._updateConfig("entity", event.target.value.trim());
-    });
-
-    this.shadowRoot.getElementById("name").addEventListener("change", (event) => {
-      this._updateConfig("name", event.target.value.trim());
-    });
-
-    this.shadowRoot.getElementById("show_name").addEventListener("change", (event) => {
-      this._updateConfig("show_name", event.target.checked);
-    });
-
-    this.shadowRoot.getElementById("show_percentage_text").addEventListener("change", (event) => {
-      this._updateConfig("show_percentage_text", event.target.checked);
-    });
-
-    this.shadowRoot.getElementById("orientation").addEventListener("change", (event) => {
-      this._updateConfig("orientation", event.target.value);
-    });
-
-    this.shadowRoot.getElementById("title_position").addEventListener("change", (event) => {
-      this._updateConfig("title_position", event.target.value);
-    });
   }
 }
 
 customElements.define("battery-level-card", BatteryLevelCard);
-customElements.define("battery-level-card-editor", BatteryLevelCardEditor);
 
 window.customCards = window.customCards || [];
 if (!window.customCards.some((c) => c.type === "battery-level-card")) {
   window.customCards.push({
     type: "battery-level-card",
     name: "Battery Level Card",
+    preview: false,
     description: "Zeigt den Batteriestand als visuelle Batterie-Anzeige mit Farbverlauf an",
+    documentationURL: "https://github.com/gsnhf/battery-level-card",
   });
 }
 
 console.info(
-  "%c BATTERY-LEVEL-CARD %c v1.0.0 ",
+  "%c BATTERY-LEVEL-CARD %c v2026.03.10.1 ",
   "color:white;background:#16a34a;font-weight:bold;padding:2px 6px;border-radius:4px 0 0 4px;",
   "color:#16a34a;background:#e5e7eb;font-weight:bold;padding:2px 6px;border-radius:0 4px 4px 0;"
 );
