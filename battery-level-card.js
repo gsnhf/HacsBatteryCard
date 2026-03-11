@@ -140,6 +140,16 @@ class BatteryLevelCard extends HTMLElement {
           display: flex;
           gap: 16px;
         }
+        /* Orientation controls whether name and battery are laid out horizontally or vertically */
+        .battery-container.orientation-horizontal {
+          flex-direction: row;
+          align-items: center;
+        }
+        .battery-container.orientation-vertical {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
         .battery-container.title-side {
           align-items: center;
           justify-content: space-between;
@@ -231,7 +241,7 @@ class BatteryLevelCard extends HTMLElement {
         }
       </style>
       <ha-card>
-        <div class="battery-container ${titleClass}${this._config.show_name ? "" : " no-name"}${isUnavailable ? " unavailable" : ""}">
+        <div class="battery-container ${titleClass} ${orientationClass}${this._config.show_name ? "" : " no-name"}${isUnavailable ? " unavailable" : ""}">
           ${nameHtml}
           ${batteryHtml}
         </div>
