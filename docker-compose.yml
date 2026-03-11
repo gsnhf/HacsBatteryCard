@@ -1,0 +1,12 @@
+services:
+  homeassistant:
+    container_name: battery-level-card-homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    environment:
+      TZ: Europe/Berlin
+    volumes:
+      - ./ha-config:/config
+      - ./:/config/www/community/battery-level-card:ro
