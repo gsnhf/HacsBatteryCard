@@ -122,55 +122,31 @@ Die Karte ist in JavaScript geschrieben und nutzt native Web Components. Keine z
 
 ### Entwicklungsumgebung starten
 
-Für die lokale Entwicklung ist im Repository ein Devcontainer und eine Docker-Compose-Datei für Home Assistant enthalten.
+Für die lokale Entwicklung ist im Repository eine Docker-Compose-Datei für Home Assistant enthalten. Die Karte, eine Test-Entity und ein vorkonfiguriertes Dashboard werden automatisch eingerichtet.
 
 1. Öffne das Repository in VS Code.
-2. Starte den Devcontainer über `Dev Containers: Reopen in Container`.
-3. Starte anschließend Home Assistant:
-   - über den Task `Home Assistant: Start`
-   - oder im Terminal mit `docker-compose up -d`
-4. Öffne Home Assistant:
+2. Starte Home Assistant:
+   - über den Task `Home Assistant: Start` (Terminal → Task ausführen)
+   - oder im Terminal mit `docker compose up -d`
+3. Öffne Home Assistant:
    - über den Task `Home Assistant: Open`
    - oder im Browser unter `http://localhost:8123`
-5. Richte Home Assistant beim ersten Start ein.
-6. Füge unter `Einstellungen → Dashboards → Ressourcen` diese Ressource hinzu:
-   ```yaml
-   url: /local/community/battery-level-card/battery-level-card.js?v=2026.03.10.1
-   type: module
-   ```
-7. Lege eine Karte mit `type: custom:battery-level-card` an.
+4. Richte Home Assistant beim ersten Start ein (Benutzer anlegen).
+5. Fertig – das Dashboard mit Testkarten ist unter **Übersicht** verfügbar.
 
-Beispiel:
-
-```yaml
-type: custom:battery-level-card
-entity: sensor.phone_battery_level
-name: Handy Akku
-orientation: horizontal
-title_position: side
-```
+Die Lovelace-Ressource, eine Test-Battery-Entity (`sensor.test_battery_level`) und ein Dashboard mit verschiedenen Kartenvarianten werden automatisch über die Dateien in `ha-config/` bereitgestellt. Der Batteriestand kann über den Slider `input_number.test_battery` live verändert werden.
 
 ### Entwicklungs-Workflow
 
 - Änderungen an `battery-level-card.js` werden durch den Bind-Mount sofort in Home Assistant sichtbar.
 - Nach Änderungen reicht in der Regel ein harter Browser-Reload.
 - Nützliche VS-Code-Tasks:
-  - `Home Assistant: Start`
-  - `Home Assistant: Stop`
-  - `Home Assistant: Restart`
-  - `Home Assistant: Logs`
-  - `Home Assistant: Open`
+  - `Home Assistant: Start` – Container starten
+  - `Home Assistant: Stop` – Container stoppen
+  - `Home Assistant: Restart` – Container neu starten
+  - `Home Assistant: Logs` – Container-Logs anzeigen
+  - `Home Assistant: Open` – Home Assistant im Browser öffnen
 - Die persistente Home-Assistant-Konfiguration liegt im lokalen Ordner `ha-config/`.
-
-### Entwicklung ohne Devcontainer
-
-Wenn du keinen Devcontainer verwenden willst, kannst du Home Assistant direkt im Repository-Ordner starten:
-
-```bash
-docker-compose up -d
-```
-
-Der Test-Workflow bleibt gleich, solange die Ressource auf `/local/community/battery-level-card/battery-level-card.js` zeigt.
 
 ## Lizenz
 

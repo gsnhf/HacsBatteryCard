@@ -1,0 +1,23 @@
+title: Battery Level Card Dev
+views:
+  - title: Test
+    cards:
+      - type: custom:battery-level-card
+        entity: sensor.test_battery_level
+        name: Test Battery
+
+      - type: custom:battery-level-card
+        entity: sensor.test_battery_level
+        name: Vertikal
+        orientation: vertical
+        title_position: top
+
+      - type: custom:battery-level-card
+        entity: sensor.test_battery_level
+        name: Ohne Prozent
+        show_percentage_text: false
+
+      - type: entities
+        title: Batteriestand einstellen
+        entities:
+          - entity: input_number.test_battery
