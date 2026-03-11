@@ -316,7 +316,7 @@ class BatteryLevelCard extends HTMLElement {
           case "show_percentage_text":
             return "Prozentzahl in der Batterie anzeigen";
           case "orientation":
-            return "Ausrichtung des Batteriesymbols";
+            return "Anordnung von Name und Batterie";
           case "title_position":
             return "Position des Titels";
           default:
@@ -328,7 +328,7 @@ class BatteryLevelCard extends HTMLElement {
           case "name":
             return "Leer lassen, um den Friendly Name der Entity zu verwenden.";
           case "orientation":
-            return "Legt fest, ob das Batteriesymbol horizontal oder vertikal gerendert wird.";
+            return "Legt fest, ob Name und Batteriesymbol horizontal (nebeneinander) oder vertikal (übereinander) angeordnet werden.";
           case "title_position":
             return "Legt fest, ob der Titel neben oder über dem Batteriesymbol steht.";
           default:
