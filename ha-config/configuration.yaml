@@ -2,7 +2,6 @@ homeassistant:
   name: Battery Level Card Dev
 
 lovelace:
-  mode: yaml
   resources:
     - url: /local/community/battery-level-card/battery-level-card.js
       type: module
