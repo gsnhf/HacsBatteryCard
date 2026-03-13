@@ -20,9 +20,6 @@ build/
 .env
 *.local
 
-# VSCode
-.vscode/
-
 # Home Assistant runtime files
 ha-config/.storage/
 ha-config/.cloud/

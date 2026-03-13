@@ -116,38 +116,72 @@ Die Farbe der Batterie-Füllung ändert sich automatisch basierend auf dem Lades
 | 50-75%  | Gelb → Hellgrün |
 | 75-100% | Hellgrün → Grün |
 
-## Entwicklung
+## Entwicklung & lokaler Test (Kurzfassung)
 
-Die Karte ist in JavaScript geschrieben und nutzt native Web Components. Keine zusätzlichen Build-Tools oder Abhängigkeiten erforderlich.
+Kurz: das Projekt liefert eine lokale Home Assistant Instanz per `docker compose` plus eine vorkonfigurierte Lovelace‑Ressource. Deine Arbeitskopie wird ins HA‑Container‑`www` Verzeichnis gemountet, Änderungen an `battery-level-card.js` sind sofort verfügbar.
 
-### Entwicklungsumgebung starten
+- Voraussetzungen: Docker (und docker compose) sowie VS Code (optional: Devcontainer).
+- Starten (Projekt-Root):
 
-Für die lokale Entwicklung ist im Repository eine Docker-Compose-Datei für Home Assistant enthalten. Die Karte, eine Test-Entity und ein vorkonfiguriertes Dashboard werden automatisch eingerichtet.
+```bash
+docker compose up -d
+```
 
-1. Öffne das Repository in VS Code.
-2. Starte Home Assistant:
-   - über den Task `Home Assistant: Start` (Terminal → Task ausführen)
-   - oder im Terminal mit `docker compose up -d`
-3. Öffne Home Assistant:
-   - über den Task `Home Assistant: Open`
-   - oder im Browser unter `http://localhost:8123`
-4. Richte Home Assistant beim ersten Start ein (Benutzer anlegen).
-5. Fertig – das Dashboard mit Testkarten ist unter **Übersicht** verfügbar.
+- Öffnen: http://localhost:8123 (oder VS Code Task `Home Assistant: Open`).
 
-Die Lovelace-Ressource, eine Test-Battery-Entity (`sensor.test_battery_level`) und ein Dashboard mit verschiedenen Kartenvarianten werden automatisch über die Dateien in `ha-config/` bereitgestellt. Der Batteriestand kann über den Slider `input_number.test_battery` live verändert werden.
+- Devcontainer: Öffne das Repo mit Remote‑Container → Port 8123 wird weitergereicht. Im Devcontainer kannst du `docker compose up -d` ausführen (Feature `docker-outside-of-docker` ist konfiguriert).
 
-### Entwicklungs-Workflow
+Wie die Karte ins Test‑System kommt
+- Die Compose‑Volume-Zeile mountet das Repo-Root nach `/config/www/community/battery-level-card` im Container. Daher ist `battery-level-card.js` im Container unter `/config/www/community/battery-level-card/battery-level-card.js` verfügbar.
+- Speichern in deiner Arbeitskopie reicht — ein Container‑Restart ist normalerweise nicht nötig.
 
-- Änderungen an `battery-level-card.js` werden durch den Bind-Mount sofort in Home Assistant sichtbar.
-- Nach Änderungen reicht in der Regel ein harter Browser-Reload.
-- Nützliche VS-Code-Tasks:
-  - `Home Assistant: Start` – Container starten
-  - `Home Assistant: Stop` – Container stoppen
-  - `Home Assistant: Restart` – Container neu starten
-  - `Home Assistant: Logs` – Container-Logs anzeigen
-  - `Home Assistant: Open` – Home Assistant im Browser öffnen
-- Die persistente Home-Assistant-Konfiguration liegt im lokalen Ordner `ha-config/`.
+Cache & Live‑Reload
+- Browsercache entfernen: DevTools → "Disable cache" + Reload (Ctrl/Cmd+R oder Ctrl/Cmd+F5).
+- Alternativ: Resource‑URL mit Version versehen, z. B. `/local/community/battery-level-card/battery-level-card.js?v=20260313` in `ha-config/configuration.yaml`.
+
+Prüfen / Debugging
+- Logs anzeigen:
+
+```bash
+docker compose logs -f homeassistant
+```
+
+- Datei im Container prüfen:
+
+```bash
+docker exec -it battery-level-card-homeassistant ls -l /config/www/community/battery-level-card
+docker exec -it battery-level-card-homeassistant cat /config/www/community/battery-level-card/battery-level-card.js | sed -n '1,40p'
+```
+
+- Container neu starten (falls notwendig):
+
+```bash
+docker compose restart homeassistant
+```
+
+Kurz-Workflow (empfohlen)
+1. Öffne Projekt in VS Code (optional im Devcontainer).
+2. `docker compose up -d` starten.
+3. `battery-level-card.js` ändern und speichern.
+4. Im Browser: DevTools → Disable cache → harte Seite neu laden oder `?v=` in der Ressource erhöhen.
+
+Troubleshooting
+- Prüfe `ha-config/configuration.yaml` → Ressource `/local/community/battery-level-card/battery-level-card.js` muss gesetzt sein.
+- Bei Module‑Import‑Fehlern: Browserkonsole prüfen.
+- Wenn Änderungen nicht geladen werden: Cache oder Query‑Param vergessen.
+
+## VS Code Tasks (Kurz)
+
+Im Projekt sind VS Code Tasks für häufige Arbeitsschritte hinterlegt. Du findest sie unter `/.vscode/tasks.json` und kannst sie über Terminal → Run Task starten.
+
+- **Home Assistant: Start / Stop / Restart / Logs / Open** — Container starten, stoppen, Logs verfolgen oder die UI öffnen.
+- **Git: Add All** — führt `git add -A` im Repo aus.
+- **Git: Commit (auto)** — commitet mit automatischer Kurzmeldung `dev: update<timestamp>` (falls keine Änderungen existieren, passiert nichts).
+- **Git: Push** — pushed den aktuellen Branch.
+- **Git: Commit & Push** — kombiniert Add, Commit und Push.
+
+Im Devcontainer funktionieren die Tasks genauso; der Devcontainer hat `docker-outside-of-docker` konfiguriert, sodass `docker compose` Befehle funktionieren.
 
 ## Lizenz
 
-Veröffentlicht unter der MIT-Lizenz. Siehe `LICENSE` für Details.
+Veröffentlicht unter der MIT‑Lizenz. Siehe `LICENSE` für Details.
