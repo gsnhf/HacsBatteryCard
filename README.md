@@ -1,185 +1,224 @@
 # Battery Level Card
 
-Eine benutzerdefinierte Lovelace-Karte für Home Assistant, die den Batteriestand von Geräten als visuelle Batterie-Anzeige darstellt.
+A custom Lovelace card for Home Assistant that renders a device battery level as a visual battery indicator.
 
-![Battery Level Card Preview](docs/preview.png)
+![Battery Level Card Icon](docs/icon.svg)
 
 ## Features
 
-- 🔋 **Visuelle Batterie-Anzeige** - Der Batteriestand wird als gefüllte Batterie dargestellt
-- 🎨 **Farbverlauf** - Automatischer Farbwechsel von Rot (leer) über Gelb zu Grün (voll)
-- 📊 **Optionale Prozentanzeige** - Die Prozentzahl kann direkt im Batteriesymbol angezeigt werden
-- ⚙️ **Editor-Unterstützung** - Konfiguration über den Lovelace-Editor oder direkt im YAML-Code
-- ↔️ **Flexible Ausrichtung** - Batteriesymbol horizontal oder vertikal darstellbar
-- 🏷️ **Flexibler Titel** - Sensorbezeichnung optional, neben oder über dem Batteriesymbol
-- 🏠 **HACS-kompatibel** - Einfache Installation über HACS
+- Visual battery indicator with live fill level
+- Automatic color transition from red (empty) to green (full)
+- Optional percentage text inside the battery
+- Built-in Lovelace visual editor support
+- Horizontal or vertical battery layout
+- Optional title shown beside or above the battery
+- HACS compatible for simple installation
 
 ## Installation
 
-### HACS (empfohlen)
-1. Öffne HACS in Home Assistant
-2. Gehe zu "Frontend"
-3. Klicke auf die drei Punkte oben rechts und wähle "Benutzerdefinierte Repositories"
-4. Füge dieses Repository hinzu mit Kategorie "Lovelace"
-5. Suche nach "Battery Level Card" und installiere es
-6. Starte Home Assistant neu
+### HACS (recommended)
+1. Open HACS in Home Assistant.
+2. Go to Frontend.
+3. Open the menu in the top right and choose Custom repositories.
+4. Add this repository with the category Lovelace.
+5. Search for Battery Level Card and install it.
+6. Restart Home Assistant.
 
-### Manuell
-1. Kopiere `battery-level-card.js` in den Ordner `config/www/community/battery-level-card/`
-2. Füge die Ressource zu deinen Lovelace-Dashboards hinzu (`Einstellungen → Dashboards → Ressourcen`):
-   ```yaml
-   url: /local/community/battery-level-card/battery-level-card.js
-   type: module
-   ```
-3. Leere den Browser-Cache, falls die Karte nicht sofort erscheint
+### Manual
+1. Copy `battery-level-card.js` to `config/www/community/battery-level-card/`.
+2. Add the resource to your Lovelace dashboard resources under Settings -> Dashboards -> Resources:
 
-## Konfiguration
+```yaml
+url: /local/community/battery-level-card/battery-level-card.js
+type: module
+```
 
-### Über den visuellen Editor
-1. Füge eine neue Karte hinzu
-2. Suche nach "Battery Level Card"
-3. Wähle die gewünschte Battery-Entity aus
-4. Konfiguriere optional den Namen und weitere Einstellungen
+3. Clear the browser cache if the card does not appear immediately.
 
-### YAML-Konfiguration
+## Configuration
+
+### Visual editor
+The card includes a built-in Lovelace configuration form, so you can configure it without writing YAML.
+
+1. Open your dashboard.
+2. Click Edit dashboard.
+3. Add a new card.
+4. Search for Battery Level Card.
+5. Select the battery sensor entity you want to display.
+6. Adjust the optional settings in the form.
+
+The visual editor currently exposes these options:
+
+| Field                  | Description                                                           |
+| ---------------------- | --------------------------------------------------------------------- |
+| `entity`               | Required. The battery sensor entity to display.                       |
+| `name`                 | Optional custom title. Leave empty to use the entity's friendly name. |
+| `show_name`            | Shows or hides the sensor name/title.                                 |
+| `show_percentage_text` | Shows or hides the percentage text inside the battery.                |
+| `orientation`          | Controls the battery direction: `horizontal` or `vertical`.           |
+| `title_position`       | Places the title beside the battery (`side`) or above it (`top`).     |
+
+Editor behavior notes:
+
+- `orientation` changes the battery shape direction itself.
+- `title_position` changes where the title is placed relative to the battery.
+- If `show_name` is disabled, the card centers the battery visually.
+- If the entity state is `unknown` or `unavailable`, the battery is shown as empty and dimmed.
+
+### YAML configuration
 
 ```yaml
 type: custom:battery-level-card
 entity: sensor.phone_battery_level
-name: Handy Akku  # optional, überschreibt den Entity-Namen
-show_percentage_text: true  # optional, zeigt % in der Batterie an (Standard: true)
-show_name: true  # optional, zeigt die Sensorbezeichnung an (Standard: true)
-orientation: horizontal  # optional: horizontal | vertical
-title_position: side  # optional: side | top
+name: Phone Battery
+show_percentage_text: true
+show_name: true
+orientation: horizontal
+title_position: side
 ```
 
-### Konfigurationsoptionen
+### Configuration options
 
-| Option                 | Typ     | Standard     | Beschreibung                                               |
-| ---------------------- | ------- | ------------ | ---------------------------------------------------------- |
-| `entity`               | string  | **Pflicht**  | Die Entity-ID des Batterie-Sensors                         |
-| `name`                 | string  | Entity-Name  | Benutzerdefinierter Name für die Anzeige                   |
-| `show_percentage_text` | boolean | `true`       | Zeigt die Prozentzahl im Batteriesymbol an                 |
-| `show_name`            | boolean | `true`       | Blendet die Sensorbezeichnung ein oder aus                 |
-| `orientation`          | string  | `horizontal` | Ausrichtung des Batteriesymbols (`horizontal`, `vertical`) |
-| `title_position`       | string  | `side`       | Titel neben oder über dem Batteriesymbol (`side`, `top`)   |
+| Option                 | Type    | Default              | Description                                     |
+| ---------------------- | ------- | -------------------- | ----------------------------------------------- |
+| `entity`               | string  | required             | The entity ID of the battery sensor             |
+| `name`                 | string  | entity friendly name | Custom display title                            |
+| `show_percentage_text` | boolean | `true`               | Shows the percentage inside the battery         |
+| `show_name`            | boolean | `true`               | Shows or hides the sensor title                 |
+| `orientation`          | string  | `horizontal`         | Battery orientation: `horizontal` or `vertical` |
+| `title_position`       | string  | `side`               | Places the title at the side or at the top      |
 
-## Beispiele
+## Examples
 
-### Einfache Verwendung
+### Basic usage
+
 ```yaml
 type: custom:battery-level-card
 entity: sensor.smartphone_battery
 ```
 
-### Mit benutzerdefiniertem Namen
+### With a custom title
+
 ```yaml
 type: custom:battery-level-card
 entity: sensor.tablet_battery_level
-name: iPad Akku
+name: iPad Battery
 ```
 
-### Ohne Prozenttext in der Batterie
+### Without percentage text inside the battery
+
 ```yaml
 type: custom:battery-level-card
 entity: sensor.remote_battery
-name: Fernbedienung
+name: Remote Control
 show_percentage_text: false
 ```
 
-### Vertikale Darstellung mit Titel darüber
+### Vertical layout with the title above the battery
+
 ```yaml
 type: custom:battery-level-card
 entity: sensor.window_sensor_battery
-name: Fenstersensor
+name: Window Sensor
 orientation: vertical
 title_position: top
 ```
 
-### Ohne Sensorbezeichnung
+### Without a title
+
 ```yaml
 type: custom:battery-level-card
 entity: sensor.mouse_battery
 show_name: false
 ```
 
-## Farbschema
+## Color scheme
 
-Die Farbe der Batterie-Füllung ändert sich automatisch basierend auf dem Ladestand:
+The battery fill color changes automatically based on the charge level:
 
-| Bereich | Farbe           |
-| ------- | --------------- |
-| 0-25%   | Rot → Orange    |
-| 25-50%  | Orange → Gelb   |
-| 50-75%  | Gelb → Hellgrün |
-| 75-100% | Hellgrün → Grün |
+| Range   | Color                 |
+| ------- | --------------------- |
+| 0-25%   | Red -> Orange         |
+| 25-50%  | Orange -> Yellow      |
+| 50-75%  | Yellow -> Light Green |
+| 75-100% | Light Green -> Green  |
 
-## Entwicklung & lokaler Test (Kurzfassung)
+## Development and local testing
 
-Kurz: das Projekt liefert eine lokale Home Assistant Instanz per `docker compose` plus eine vorkonfigurierte Lovelace‑Ressource. Deine Arbeitskopie wird ins HA‑Container‑`www` Verzeichnis gemountet, Änderungen an `battery-level-card.js` sind sofort verfügbar.
+In short: the project provides a local Home Assistant instance through `docker compose` plus a preconfigured Lovelace resource. Your working copy is mounted into the Home Assistant container `www` directory, so changes to `battery-level-card.js` are available immediately.
 
-- Voraussetzungen: Docker (und docker compose) sowie VS Code (optional: Devcontainer).
-- Starten (Projekt-Root):
+- Requirements: Docker with Docker Compose and optionally VS Code or a Dev Container.
+- Start from the project root:
 
 ```bash
 docker compose up -d
 ```
 
-- Öffnen: http://localhost:8123 (oder VS Code Task `Home Assistant: Open`).
+- Open: http://localhost:8123 or use the VS Code task `Home Assistant: Open`.
 
-- Devcontainer: Öffne das Repo mit Remote‑Container → Port 8123 wird weitergereicht. Im Devcontainer kannst du `docker compose up -d` ausführen (Feature `docker-outside-of-docker` ist konfiguriert).
+- Dev Container: open the repository in a Dev Container. Port 8123 is forwarded. Inside the container you can run `docker compose up -d` because the `docker-outside-of-docker` feature is configured.
 
-Wie die Karte ins Test‑System kommt
-- Die Compose‑Volume-Zeile mountet das Repo-Root nach `/config/www/community/battery-level-card` im Container. Daher ist `battery-level-card.js` im Container unter `/config/www/community/battery-level-card/battery-level-card.js` verfügbar.
-- Speichern in deiner Arbeitskopie reicht — ein Container‑Restart ist normalerweise nicht nötig.
+### How the card reaches the test system
 
-Cache & Live‑Reload
-- Browsercache entfernen: DevTools → "Disable cache" + Reload (Ctrl/Cmd+R oder Ctrl/Cmd+F5).
-- Alternativ: Resource‑URL mit Version versehen, z. B. `/local/community/battery-level-card/battery-level-card.js?v=20260313` in `ha-config/configuration.yaml`.
+- The Compose volume mounts the repository root to `/config/www/community/battery-level-card` inside Home Assistant.
+- That means `battery-level-card.js` is available in the container at `/config/www/community/battery-level-card/battery-level-card.js`.
+- Saving changes in your working copy is usually enough. A container restart is normally not required.
 
-Prüfen / Debugging
-- Logs anzeigen:
+### Cache and live reload
+
+- Disable browser cache in DevTools and reload the page with Ctrl+F5.
+- Alternatively, add a version query string to the resource URL, for example `/local/community/battery-level-card/battery-level-card.js?v=20260318`.
+
+### Check and debug
+
+Show Home Assistant logs:
 
 ```bash
 docker compose logs -f homeassistant
 ```
 
-- Datei im Container prüfen:
+Check the file inside the container:
 
 ```bash
 docker exec -it battery-level-card-homeassistant ls -l /config/www/community/battery-level-card
 docker exec -it battery-level-card-homeassistant cat /config/www/community/battery-level-card/battery-level-card.js | sed -n '1,40p'
 ```
 
-- Container neu starten (falls notwendig):
+Restart the container if needed:
 
 ```bash
 docker compose restart homeassistant
 ```
 
-Kurz-Workflow (empfohlen)
-1. Öffne Projekt in VS Code (optional im Devcontainer).
-2. `docker compose up -d` starten.
-3. `battery-level-card.js` ändern und speichern.
-4. Im Browser: DevTools → Disable cache → harte Seite neu laden oder `?v=` in der Ressource erhöhen.
+### Recommended workflow
 
-Troubleshooting
-- Prüfe `ha-config/configuration.yaml` → Ressource `/local/community/battery-level-card/battery-level-card.js` muss gesetzt sein.
-- Bei Module‑Import‑Fehlern: Browserkonsole prüfen.
-- Wenn Änderungen nicht geladen werden: Cache oder Query‑Param vergessen.
+1. Open the project in VS Code, optionally in a Dev Container.
+2. Run `docker compose up -d`.
+3. Edit `battery-level-card.js` and save it.
+4. In the browser, disable cache and do a hard reload, or bump the `?v=` query parameter.
 
-## VS Code Tasks (Kurz)
+### Troubleshooting
 
-Im Projekt sind VS Code Tasks für häufige Arbeitsschritte hinterlegt. Du findest sie unter `/.vscode/tasks.json` und kannst sie über Terminal → Run Task starten.
+- Check `ha-config/configuration.yaml` and make sure the resource `/local/community/battery-level-card/battery-level-card.js` is configured.
+- If you see module import errors, inspect the browser console.
+- If changes are not visible, the issue is usually browser cache or an unchanged query parameter.
 
-- **Home Assistant: Start / Stop / Restart / Logs / Open** — Container starten, stoppen, Logs verfolgen oder die UI öffnen.
-- **Git: Add All** — führt `git add -A` im Repo aus.
-- **Git: Commit (auto)** — commitet mit automatischer Kurzmeldung `dev: update<timestamp>` (falls keine Änderungen existieren, passiert nichts).
-- **Git: Push** — pushed den aktuellen Branch.
-- **Git: Commit & Push** — kombiniert Add, Commit und Push.
+## VS Code tasks
 
-Im Devcontainer funktionieren die Tasks genauso; der Devcontainer hat `docker-outside-of-docker` konfiguriert, sodass `docker compose` Befehle funktionieren.
+The repository includes VS Code tasks for common local actions. You can run them from Terminal -> Run Task.
 
-## Lizenz
+- `Home Assistant: Start / Stop / Restart / Logs / Open` to control the local container or open the UI.
+- `Git: Add All` runs `git add -A` in the repository.
+- `Git: Commit (auto)` creates an automatic short commit message in the form `dev: update<timestamp>` if there are changes.
+- `Git: Push` pushes the current branch.
+- `Git: Commit & Push` combines add, commit, and push.
 
-Veröffentlicht unter der MIT‑Lizenz. Siehe `LICENSE` für Details.
+These tasks work the same way inside the Dev Container because `docker-outside-of-docker` is configured.
+
+## Repository icon
+
+An SVG icon matching the battery look of the card is included at `docs/icon.svg`. You can reuse it for documentation, releases, or repository presentation.
+
+## License
+
+Released under the MIT License. See `LICENSE` for details.
