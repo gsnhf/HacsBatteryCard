@@ -1,7 +1,5 @@
 # Battery Level Card
 
-# CURRENTTLY UNDER DEVELOPMENT AND COMPLETELY UNTESTED!!!!
-
 Eine benutzerdefinierte Lovelace-Karte für Home Assistant, die den Batteriestand von Geräten als visuelle Batterie-Anzeige darstellt.
 
 ![Battery Level Card Preview](docs/preview.png)
