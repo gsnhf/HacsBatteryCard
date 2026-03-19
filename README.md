@@ -1,5 +1,7 @@
 # Battery Level Card
 
+[![Validate](https://github.com/gsnhf/battery-level-card/actions/workflows/validate.yml/badge.svg)](https://github.com/gsnhf/battery-level-card/actions/workflows/validate.yml)
+
 A custom Lovelace card for Home Assistant that renders a device battery level as a visual battery indicator.
 
 ![Battery Level Card Icon](docs/icon.svg)
